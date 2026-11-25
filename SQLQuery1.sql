@@ -1,0 +1,471 @@
+﻿-------------------------------------------------------------
+-- 1. ĐƠN VỊ TÍNH
+-------------------------------------------------------------
+CREATE TABLE DONVITINH (
+    DVT_MA CHAR(5) PRIMARY KEY,
+    DVT_TEN NVARCHAR(50) NOT NULL
+);
+
+INSERT INTO DONVITINH (DVT_MA, DVT_TEN) VALUES
+('DVT01', N'Hộp'),
+('DVT02', N'Vỉ'),
+('DVT03', N'Viên'),
+('DVT04', N'Chai'),
+('DVT05', N'Tuýp'),
+('DVT06', N'Gói'),
+('DVT07', N'Ống'),
+('DVT08', N'Lọ'),
+('DVT09', N'Hũ'),
+('DVT10', N'Bình');
+
+
+-------------------------------------------------------------
+-- 2. NGÀY
+-------------------------------------------------------------
+CREATE TABLE NGAY (
+    NGAY DATE PRIMARY KEY
+);
+
+INSERT INTO NGAY (NGAY) VALUES
+('2025-01-05'),
+('2025-01-10'),
+('2025-02-15'),
+('2025-03-01'),
+('2025-03-20'),
+('2025-04-05'),
+('2025-04-25'),
+('2025-05-10'),
+('2025-06-01'),
+('2025-07-15');
+
+-------------------------------------------------------------
+-- 3. THUỐC
+-------------------------------------------------------------
+CREATE TABLE THUOC (
+    T_MA CHAR(10) PRIMARY KEY,
+    T_TEN NVARCHAR(100) NOT NULL,
+	T_THANHPHAN NVARCHAR(255),
+    T_SLTON INT,
+    T_HINHANH NVARCHAR(255),
+    DVT_MA CHAR(5),
+    FOREIGN KEY (DVT_MA) REFERENCES DONVITINH(DVT_MA)
+);
+
+INSERT INTO THUOC (T_MA, T_TEN, T_THANHPHAN, T_SLTON, T_HINHANH, DVT_MA) VALUES
+('A001', N'Amoxicillin 500mg', N'Amoxicillin trihydrate 500mg; tá dược vừa đủ', 500, N'amoxicillin.jpg', 'DVT03'),  -- viên
+('A002', N'Amoxicillin + Clavulanic acid 625mg', N'Amoxicillin 500mg; Clavulanic acid 125mg; magnesium stearate; cellulose', 300, N'augmentin.jpg', 'DVT03'),	--viên
+('A003', N'Azithromycin 250mg', N'Azithromycin dihydrate 250mg; natri lauryl sulfat; tinh bột ngô', 100, N'azithromycin.jpg', 'DVT03'), 
+('B001', N'Betadine Solution 10%', N'Povidone-Iodine 10%; nước tinh khiết; chất ổn định', 600, N'betadine.jpg', 'DVT04'), -- chai
+('C001', N'Cefuroxime 250mg', N'Cefuroxime axetil 250mg; microcrystalline cellulose; silicon dioxide', 200, N'cefuroxime.jpg', 'DVT03'), -- viên
+('C002', N'Cefalexin 500mg', N'Cefalexin monohydrate 500mg; sodium starch glycolate; tinh bột', 400, N'cefalexin.jpg', 'DVT03'),
+('D001', N'Diclofenac 50mg', N'Diclofenac sodium 50mg; tinh bột ngô; lactose; talc', 600, N'diclofenac.jpg', 'DVT03'),
+('D002', N'Domperidone 10mg', N'Domperidone maleate 10mg; cellulose vi tinh thể; magnesi stearate', 900, N'domperidone.jpg', 'DVT03'),
+('I001', N'Ibuprofen 400mg', N'Ibuprofen 400mg; silica keo; talc; titan dioxide', 700, N'ibuprofen.jpg', 'DVT03'),
+('L001', N'Loratadine 10mg', N'Loratadine 10mg; cellulose; tinh bột ngô; magnesium stearate', 100, N'loratadine.jpg', 'DVT03'),
+('L002', N'Loperamid 2mg', N'Loperamide hydrochloride 2mg; lactose monohydrate; talc', 200, N'loperamid.jpg', 'DVT03'),
+('M001', N'Metformin 500mg', N'Metformin hydrochloride 500mg; PVP; tinh bột ngô', 200, N'metformin.jpg', 'DVT03'),
+('M002', N'Metoprolol 50mg', N'Metoprolol tartrate 50mg; cellulose vi tinh thể; magnesium stearate', 500, N'metoprolol.jpg', 'DVT03'),
+('O001', N'Omeprazole 20mg', N'Omeprazole 20mg; sodium bicarbonate; hypromellose', 100, N'omeprazole.jpg', 'DVT03'),
+('P001', N'Paracetamol 500mg', N'Paracetamol 500mg; tinh bột; PVP; magnesium stearate', 200, N'paracetamol.jpg', 'DVT03'),
+('P002', N'Prednisolone 5mg', N'Prednisolone 5mg; lactose; magnesi stearate; silica keo', 400, N'prednisolone.jpg', 'DVT03'),
+('V001', N'Vitamin C 1000mg', N'Ascorbic acid 1000mg; sucrose; tinh bột; hương cam', 200, N'vitaminc.jpg', 'DVT06'), -- gói
+('V002', N'Vitamin E 400IU', N'Tocopherol acetate 400IU; gelatin; glycerin; nước tinh khiết', 100, N'vitamine.jpg', 'DVT10'); -- lọ
+
+-------------------------------------------------------------
+-- 4. ĐƠN GIÁ
+-------------------------------------------------------------
+CREATE TABLE DONGIA (
+    NGAY DATE,
+    T_MA CHAR(10),
+    DG_DONGIA DECIMAL(12,2) NOT NULL,
+    PRIMARY KEY (NGAY, T_MA),
+    FOREIGN KEY (NGAY) REFERENCES NGAY(NGAY),
+    FOREIGN KEY (T_MA) REFERENCES THUOC(T_MA)
+);
+
+INSERT INTO DONGIA (NGAY, T_MA, DG_DONGIA) VALUES
+('2025-01-05', 'A001', 1000),
+('2025-03-01', 'A001', 500),
+('2025-01-05', 'A002', 1500),
+('2025-02-15', 'A002', 800),
+('2025-01-05', 'A003', 1500),
+('2025-01-05', 'B001', 3500),
+('2025-01-05', 'C001', 2200),
+('2025-03-10', 'C001', 2400),
+('2025-01-05', 'C002', 1800),
+('2025-01-05', 'D001', 9000),
+('2025-05-01', 'D001', 9500),
+('2025-01-05', 'D002', 4000),
+('2025-01-05', 'I001', 2500),
+('2025-01-05', 'L001', 3200),
+('2025-01-05', 'L002', 4500),
+('2025-01-05', 'M001', 3300),
+('2025-01-05', 'M002', 7200),
+('2025-01-05', 'O001', 4700),
+('2025-01-05', 'P001', 4000),
+('2025-03-15', 'P001', 4200),
+('2025-01-05', 'P002', 3500),
+('2025-01-05', 'V001', 2000),
+('2025-01-05', 'V002', 185000),
+('2025-03-01', 'V002', 195000);
+
+-------------------------------------------------------------
+-- 6. KHÁCH HÀNG THÀNH VIÊN
+-------------------------------------------------------------
+CREATE TABLE KHACHHANGTHANHVIEN (
+    KH_SDT CHAR(10) PRIMARY KEY,
+    KH_TEN NVARCHAR(100) NOT NULL,
+    KH_GIOITINH NVARCHAR(10),
+);
+
+INSERT INTO KHACHHANGTHANHVIEN (KH_SDT, KH_TEN, KH_GIOITINH) VALUES
+('0901000001', N'Nguyễn Văn An', N'Nam'),
+('0901000002', N'Lê Thị Bích', N'Nữ'),
+('0901000003', N'Trần Quốc Huy', N'Nam'),
+('0901000004', N'Phạm Thị Hồng', N'Nữ'),
+('0901000005', N'Nguyễn Hoàng Long', N'Nam'),
+('0901000006', N'Lưu Thị Mai', N'Nữ'),
+('0901000007', N'Đỗ Văn Bình', N'Nam'),
+('0901000008', N'Võ Ngọc Trâm', N'Nữ'),
+('0901000009', N'Phan Thanh Tú', N'Nam'),
+('0901000010', N'Trịnh Thị Lan Anh', N'Nữ');
+
+
+-------------------------------------------------------------
+-- 7. CHI NHÁNH
+-------------------------------------------------------------
+CREATE TABLE CHINHANH (
+    CN_MA CHAR(10) PRIMARY KEY,
+    CN_TEN NVARCHAR(100) NOT NULL,
+    CN_DIACHI NVARCHAR(255),
+    CN_SDT CHAR(10)
+);
+
+INSERT INTO CHINHANH (CN_MA, CN_TEN, CN_DIACHI, CN_SDT)
+VALUES
+('CN01', N'Chi nhánh Ninh Kiều', N'12 Mậu Thân, Quận Ninh Kiều, TP. Cần Thơ', '0292388888'),
+('CN02', N'Chi nhánh Cái Răng', N'85 Nguyễn Văn Cừ, Quận Cái Răng, TP. Cần Thơ', '0292399999'),
+('CN03', N'Chi nhánh Bình Thủy', N'22 Lê Hồng Phong, Quận Bình Thủy, TP. Cần Thơ', '0292377777');
+
+
+-------------------------------------------------------------
+-- 10. CHỨC VỤ
+-------------------------------------------------------------
+CREATE TABLE CHUCVU (
+    CV_MA CHAR(10) PRIMARY KEY,
+    CV_TEN NVARCHAR(100)
+);
+
+INSERT INTO CHUCVU (CV_MA, CV_TEN)
+VALUES
+('CV01', N'Admin'),
+('CV02', N'Quản lý kho tổng'),
+('CV03', N'Nhân viên bán hàng'),
+('CV04', N'Quản lý chi nhánh');
+
+-------------------------------------------------------------
+-- 11. NHÂN VIÊN
+-------------------------------------------------------------
+CREATE TABLE NHANVIEN (
+    NV_MA CHAR(10) PRIMARY KEY,
+    NV_TEN NVARCHAR(100),
+    NV_NGAYSINH DATE,
+    NV_GIOITINH NVARCHAR(10),
+    NV_DIACHI NVARCHAR(255),
+    NV_EMAIL NVARCHAR(100),
+    NV_SDT CHAR(10),
+    NV_MATKHAU NVARCHAR(255),
+    NV_HINHANH NVARCHAR(255),
+    CV_MA CHAR(10),
+    FOREIGN KEY (CV_MA) REFERENCES CHUCVU(CV_MA)
+);
+
+INSERT INTO NHANVIEN 
+(NV_MA, NV_TEN, NV_NGAYSINH, NV_GIOITINH, NV_DIACHI, NV_EMAIL, NV_SDT, NV_MATKHAU, NV_HINHANH, CV_MA)
+VALUES
+('NV001', N'Nguyễn Văn Hùng', '1990-04-15', N'Nam', N'12 Trần Hưng Đạo, Quận Ninh Kiều, TP. Cần Thơ', 
+ 'hung.nguyen@nhathuocct.vn', '0909123456', '240BE518FABD2724DDB6F04EEB1DA5967448D7E831C08C8FA822809F74C720A9', N'hung.jpg', 'CV01'),	--admin123
+('NV002', N'Lê Thị Minh Phương', '1992-09-20', N'Nữ', N'85 Nguyễn Văn Cừ, Quận Cái Răng, TP. Cần Thơ',	
+ 'phuong.le@nhathuocct.vn', '0912123456', '3C65EEDFB74C86F70A244CD4B9F8726B6DA60E3E43F392DFF04E75AFB80ED0C1', N'phuong.jpg', 'CV02'),	--khotong2025
+('NV003', N'Trần Quốc Duy', '1995-03-12', N'Nam', N'25 Lê Lợi, Quận Ninh Kiều, TP. Cần Thơ', 
+ 'duy.tran@nhathuocct.vn', '0909345678', '3574C17D79D2FC83DE74118668C84CB063514D4BA8F14F1CCFDB22C67139C3A2', N'duy.jpg', 'CV03'),--banhang01
+('NV004', N'Phạm Thanh Tâm', '1997-07-07', N'Nữ', N'102 Nguyễn Trãi, Quận Bình Thủy, TP. Cần Thơ', 
+ 'tam.pham@nhathuocct.vn', '0912765432', '0B07DB5F6893C33A08B16B8AA62541AC7D7757267C2D989CA495E14D2A9EAA1A', N'tam.jpg', 'CV03'),	--banhang02
+ ('NV005', N'Nguyễn Thị Bích Ngọc', '1998-02-18', N'Nữ', N'45 Mậu Thân, Quận Ninh Kiều, TP. Cần Thơ',
+ 'ngoc.nguyen@nhathuocct.vn', '0903123456', '1C7E3197A2E16F74702CF2CE7FA4A9B87D832A45E7B4C2E3A9ECA1234F7A8B90', N'ngoc.jpg', 'CV03'), --banhang03
+('NV006', N'Đỗ Minh Khánh', '1996-11-05', N'Nam', N'20 Phạm Ngũ Lão, Quận Cái Răng, TP. Cần Thơ',
+ 'khanh.do@nhathuocct.vn', '0904567890', '9AF7C3A4E2C1D8F4A9E3B02CC9A6F8D7B12E3A7E14A93C8B42A5C7E1234D9EFA', N'khanh.jpg', 'CV03'), --banhang04
+('NV007', N'Lâm Quỳnh Anh', '1999-09-22', N'Nữ', N'89 Trần Quang Diệu, Quận Bình Thủy, TP. Cần Thơ',
+ 'anh.lam@nhathuocct.vn', '0913123987', 'E1B4A3C8D6A5F9237B8E4C71A2D6B95F34C71A29B84D1E5C79F6A234C8E3B5A2', N'anh.jpg', 'CV03'), --banhang05
+('NV008', N'Trương Hoài Phúc', '1994-04-09', N'Nam', N'56 Nguyễn Văn Linh, Quận Cái Răng, TP. Cần Thơ',
+ 'phuc.truong@nhathuocct.vn', '0914785963', 'A93B12C7E56F1A3D8B9E42A6F5C7D2E4B3A9F8E16C2D7B5A9E4C1F7A38D92B3C', N'phuc.jpg', 'CV03'), --banhang06
+('NV009', N'Võ Hoàng Nam', '1988-01-30', N'Nam', N'77 Lý Tự Trọng, Quận Ninh Kiều, TP. Cần Thơ', 
+'nam.vo@nhathuocct.vn', '0909876543', '1B0A40F4D4C7F8CF5C6CFBEF189D6B7E5F418B1A1576D0C9DFFB0AFA0F8A9B25', N'nam.jpg', 'CV04'),		--thukho01
+ ('NV010', N'Phan Văn Hải', '1985-05-05', N'Nam', N'11 Nguyễn Thái Học, Quận Ninh Kiều, TP. Cần Thơ',
+ 'hai.phan@nhathuocct.vn', '0903232323','1B0A40F4D4C7F8CF5C6CFBEF189D6B7E5F418B1A1576D0C9DFFB0AFA0F8A9B26', N'hai.jpg', 'CV04'), --quanlyCN001
+('NV011', N'Lê Ngọc Sơn', '1986-10-19', N'Nam', N'222 Nguyễn Văn Cừ, Quận Cái Răng, TP. Cần Thơ', 
+'son.le@nhathuocct.vn', '0912456789', '1B0A40F4D4C7F8CF5C6CFBEF189D6B7E5F418B1A1576D0C9DFFB0AFA0F8A9B27', N'son.jpg', 'CV04'); --quanlyCN002
+
+ -------------------------------------------------------------
+-- 12. PHIẾU NHẬP
+-------------------------------------------------------------
+CREATE TABLE PHIEUNHAP (
+    PN_MA CHAR(10) PRIMARY KEY,
+    PN_NGAYNHAP DATETIME NOT NULL,
+    PN_TRIGIA DECIMAL(12,2),
+    NV_MA CHAR(10),
+    FOREIGN KEY (NV_MA) REFERENCES NHANVIEN(NV_MA)
+);
+
+INSERT INTO PHIEUNHAP (PN_MA, PN_NGAYNHAP, PN_TRIGIA, NV_MA) VALUES
+('PN001', '2025-01-10', 8135000, 'NV002'),
+('PN002', '2025-03-15', 8900000, 'NV002'),
+('PN003', '2025-06-05', 18900000, 'NV002'),
+('PN004', '2025-08-20', 6120000, 'NV002');
+
+
+-------------------------------------------------------------
+-- 5. LÔ THUỐC
+-------------------------------------------------------------
+CREATE TABLE LOTHUOC (
+    LT_MA CHAR(15),
+    T_MA CHAR(10),
+    LT_NGAYSX DATE,
+    LT_NGAYHD DATE,
+    LT_SLNHAP INT,
+    LT_DGNHAP DECIMAL(10,2),
+    LT_SLTON INT,
+    PN_MA CHAR(10),
+    PRIMARY KEY (LT_MA, T_MA),
+    FOREIGN KEY (T_MA) REFERENCES THUOC(T_MA),
+	FOREIGN KEY (PN_MA) REFERENCES PHIEUNHAP(PN_MA),
+);
+
+INSERT INTO LOTHUOC (LT_MA, T_MA, LT_NGAYSX, LT_NGAYHD, LT_SLNHAP, LT_DGNHAP, LT_SLTON, PN_MA) VALUES
+-- PN001
+('A0010001', 'A001', '2024-12-01', '2026-12-01', 200, 1000, 200, 'PN001'),
+('A0020001', 'A002', '2024-12-15', '2026-12-15', 150, 1500, 150, 'PN001'),
+('A0030001', 'A003', '2024-11-20', '2026-11-20', 100, 1500, 100, 'PN001'),
+('B0010001', 'B001', '2024-10-01', '2027-10-01', 600, 3500, 600, 'PN001'),
+('C0010001', 'C001', '2024-12-01', '2026-12-01', 200, 2200, 200, 'PN001'),
+('C0020001', 'C002', '2024-12-01', '2026-12-01', 400, 1800, 400, 'PN001'),
+('D0010001', 'D001', '2024-11-01', '2027-11-01', 300, 9000, 300, 'PN001'),
+('D0020001', 'D002', '2024-11-01', '2027-11-01', 400, 4000, 400, 'PN001'),
+
+-- PN002
+('I0010001', 'I001', '2025-02-01', '2027-02-01', 300, 2500, 300, 'PN002'),
+('L0010001', 'L001', '2025-01-15', '2027-01-15', 100, 3200, 100, 'PN002'),
+('L0020001', 'L002', '2025-01-15', '2027-01-15', 200, 4500, 200, 'PN002'),
+('M0010001', 'M001', '2025-02-10', '2027-02-10', 200, 3300, 200, 'PN002'),
+('M0020001', 'M002', '2025-02-10', '2027-02-10', 500, 7200, 500, 'PN002'),
+('O0010001', 'O001', '2025-02-15', '2027-02-15', 100, 4700, 100, 'PN002'),
+('P0010001', 'P001', '2025-03-01', '2027-03-01', 200, 4000, 200, 'PN002'),
+('P0020001', 'P002', '2025-03-01', '2027-03-01', 400, 3500, 400, 'PN002'),
+
+-- PN003
+('V0010001', 'V001', '2025-05-01', '2027-05-01', 200, 2000, 200, 'PN003'),
+('V0020001', 'V002', '2025-05-15', '2027-05-15', 100, 185000, 100, 'PN003'),
+
+-- PN004 (bổ sung các lô 0002 cho đủ SL tồn trong THUOC)
+('A0010002', 'A001', '2025-06-01', '2027-06-01', 300, 500, 300, 'PN004'),
+('A0020002', 'A002', '2025-07-01', '2027-07-01', 150, 800, 150, 'PN004'),
+('D0010002', 'D001', '2025-06-01', '2027-06-01', 300, 9500, 300, 'PN004'),
+('D0020002', 'D002', '2025-07-01', '2027-07-01', 500, 4000, 500, 'PN004'),
+('I0010002', 'I001', '2025-07-01', '2027-07-01', 400, 2500, 400, 'PN004');
+
+------------------------------------------------------------
+-- 13. PHIẾU XUẤT
+-------------------------------------------------------------
+CREATE TABLE PHIEUXUAT (
+    PX_MA CHAR(10) PRIMARY KEY,
+    PX_NGAYXUAT DATETIME NOT NULL,
+    CN_MA CHAR(10),
+    NV_MA CHAR(10),
+    FOREIGN KEY (CN_MA) REFERENCES CHINHANH(CN_MA),
+    FOREIGN KEY (NV_MA) REFERENCES NHANVIEN(NV_MA)
+);
+
+INSERT INTO PHIEUXUAT (PX_MA, PX_NGAYXUAT, CN_MA, NV_MA) VALUES
+('PX001', '2025-07-10 09:30:00', 'CN01', 'NV02'),
+('PX002', '2025-07-11 10:00:00', 'CN02', 'NV02'),
+('PX003', '2025-07-12 14:20:00', 'CN03', 'NV02'),
+('PX004', '2025-07-25 15:00:00', 'CN01', 'NV02'),
+('PX005', '2025-07-26 09:45:00', 'CN02', 'NV02'),
+('PX006', '2025-07-27 13:10:00', 'CN03', 'NV02');
+
+-------------------------------------------------------------
+-- 14. CHI TIẾT PHIẾU XUẤT
+-------------------------------------------------------------
+CREATE TABLE CTPX (
+    LT_MA CHAR(15),
+    T_MA CHAR(10),
+    PX_MA CHAR(10),
+    CTPX_SOLUONG INT,
+    CTPX_SLTON INT,
+    PRIMARY KEY (LT_MA, T_MA, PX_MA),
+    FOREIGN KEY (LT_MA, T_MA) REFERENCES LOTHUOC(LT_MA, T_MA),
+    FOREIGN KEY (PX_MA) REFERENCES PHIEUXUAT(PX_MA)
+);
+INSERT INTO CTPX (LT_MA, T_MA, PX_MA, CTPX_SOLUONG, CTPX_SLTON) VALUES
+--PX001
+('A0010001','A001','PX001',120,107),
+('B0010001','B001','PX001',100,0),
+('C0010001','C001','PX001',100,97),
+('D0010001','D001','PX001',80,78),
+('I0010001','I001','PX001',100,100),
+('L0010001','L001','PX001',40,40),
+('M0010001','M001','PX001',80,77),
+
+--PX002
+('A0010001','A001','PX002',80,80),   -- hết lô cũ
+('A0010002','A001','PX002',50,50),   -- dùng sang lô mới
+('C0010001','C001','PX002',100,100), -- hết lô cũ
+('C0020001','C002','PX002',50,5),
+('D0010001','D001','PX002',100,100),
+('M0010001','M001','PX002',120,120),
+('P0010001','P001','PX002',100,100),
+
+--PX003
+('A0010002','A001','PX003',100,100),
+('B0010001','B001','PX003',150,150),
+('C0020001','C002','PX003',80,80),
+('D0010002','D001','PX003',80,80),
+('I0010002','I001','PX003',100,5),
+('M0020001','M002','PX003',150,15),
+('P0020001','P002','PX003',100,10),
+
+--PN004
+('A0010002','A001','PX004',150,150),
+('B0010001','B001','PX004',150,150),
+('C0020001','C002','PX004',120,114),
+('D0020001','D002','PX004',130,126),
+('I0010002','I001','PX004',100,100),
+('L0020001','L002','PX004',60,60),
+('M0020001','M002','PX004',100,95),
+
+('A0020001','A002','PX005',100,100),
+('B0010001','B001','PX005',100,100),
+('C0020001','C002','PX005',80,80),
+('D0020002','D002','PX005',150,150),
+('I0010002','I001','PX005',80,80),
+('M0020001','M002','PX005',100,100),
+('V0010001','V001','PX005',50,50),
+
+('A0020002','A002','PX006',100,100),
+('D0020002','D002','PX006',150,150),
+('I0010002','I001','PX006',100,100),
+('M0020001','M002','PX006',80,80),
+('P0020001','P002','PX006',100,100),
+('V0010001','V001','PX006',50,50),
+('V0020001','V002','PX006',30,30);
+
+-- 🔹 Cập nhật số lượng tồn lô thuốc sau 6 phiếu xuất
+UPDATE LOTHUOC SET LT_SLTON = 0   WHERE LT_MA = 'A0010001';
+UPDATE LOTHUOC SET LT_SLTON = 0   WHERE LT_MA = 'A0010002';
+UPDATE LOTHUOC SET LT_SLTON = 50  WHERE LT_MA = 'A0020001';
+UPDATE LOTHUOC SET LT_SLTON = 50  WHERE LT_MA = 'A0020002';
+UPDATE LOTHUOC SET LT_SLTON = 100 WHERE LT_MA = 'A0030001';
+UPDATE LOTHUOC SET LT_SLTON = 100 WHERE LT_MA = 'B0010001';
+UPDATE LOTHUOC SET LT_SLTON = 0   WHERE LT_MA = 'C0010001';
+UPDATE LOTHUOC SET LT_SLTON = 70  WHERE LT_MA = 'C0020001';
+UPDATE LOTHUOC SET LT_SLTON = 120 WHERE LT_MA = 'D0010001';
+UPDATE LOTHUOC SET LT_SLTON = 220 WHERE LT_MA = 'D0010002';
+UPDATE LOTHUOC SET LT_SLTON = 270 WHERE LT_MA = 'D0020001';
+UPDATE LOTHUOC SET LT_SLTON = 200 WHERE LT_MA = 'D0020002';
+UPDATE LOTHUOC SET LT_SLTON = 200 WHERE LT_MA = 'I0010001';
+UPDATE LOTHUOC SET LT_SLTON = 20  WHERE LT_MA = 'I0010002';
+UPDATE LOTHUOC SET LT_SLTON = 60  WHERE LT_MA = 'L0010001';
+UPDATE LOTHUOC SET LT_SLTON = 140 WHERE LT_MA = 'L0020001';
+UPDATE LOTHUOC SET LT_SLTON = 0   WHERE LT_MA = 'M0010001';
+UPDATE LOTHUOC SET LT_SLTON = 70  WHERE LT_MA = 'M0020001';
+UPDATE LOTHUOC SET LT_SLTON = 100 WHERE LT_MA = 'O0010001';
+UPDATE LOTHUOC SET LT_SLTON = 100 WHERE LT_MA = 'P0010001';
+UPDATE LOTHUOC SET LT_SLTON = 200 WHERE LT_MA = 'P0020001';
+UPDATE LOTHUOC SET LT_SLTON = 100 WHERE LT_MA = 'V0010001';
+UPDATE LOTHUOC SET LT_SLTON = 70  WHERE LT_MA = 'V0020001';
+
+-------------------------------------------------------------
+-- 8. HÓA ĐƠN
+-------------------------------------------------------------
+CREATE TABLE HOADON (
+    HD_MA CHAR(10) PRIMARY KEY,
+    HD_NGAYLAP DATETIME NOT NULL,
+    NV_MA CHAR(10),
+    CN_MA CHAR(10),
+    KH_SDT CHAR(10),
+    FOREIGN KEY (NV_MA) REFERENCES NHANVIEN(NV_MA),
+    FOREIGN KEY (CN_MA) REFERENCES CHINHANH(CN_MA),
+    FOREIGN KEY (KH_SDT) REFERENCES KHACHHANGTHANHVIEN(KH_SDT)
+);
+
+INSERT INTO HOADON (HD_MA, HD_NGAYLAP, NV_MA, CN_MA, KH_SDT)
+VALUES
+-- CN001 (Ninh Kiều) – NV003, NV004
+('HD001', '2025-08-05 09:30:00', 'NV003', 'CN001', '0901000001'),
+('HD002', '2025-08-15 10:45:00', 'NV004', 'CN001', '0901000002'),
+('HD003', '2025-09-01 15:20:00', 'NV003', 'CN001', '0901000003'),
+
+-- CN002 (Cái Răng) – NV006, NV005
+('HD004', '2025-08-10 11:10:00', 'NV006', 'CN002', '0901000004'),
+('HD005', '2025-08-28 14:00:00', 'NV005', 'CN002', '0901000005'),
+('HD006', '2025-09-15 09:40:00', 'NV005', 'CN002', '0901000006'),
+
+-- CN003 (Bình Thủy) – NV008, NV007
+('HD007', '2025-08-12 13:00:00', 'NV008', 'CN003', '0901000007'),
+('HD008', '2025-09-05 17:25:00', 'NV007', 'CN003', '0901000008'),
+('HD009', '2025-09-28 10:30:00', 'NV008', 'CN003', '0901000009'),
+('HD010', '2025-10-02 08:45:00', 'NV007', 'CN003', '0901000010');
+
+
+-------------------------------------------------------------
+-- 9. CHI TIẾT HÓA ĐƠN
+-------------------------------------------------------------
+CREATE TABLE CTHD (
+    LT_MA CHAR(15),
+    T_MA CHAR(10),
+    HD_MA CHAR(10),
+    CTHD_SOLUONG INT,
+    CTHD_DONGIA DECIMAL(10,2),
+    PRIMARY KEY (LT_MA, T_MA, HD_MA),
+    FOREIGN KEY (LT_MA, T_MA) REFERENCES LOTHUOC(LT_MA, T_MA),
+    FOREIGN KEY (HD_MA) REFERENCES HOADON(HD_MA)
+);
+INSERT INTO CTHD (LT_MA, T_MA, HD_MA, CTHD_SOLUONG, CTHD_DONGIA)
+VALUES
+-- CN001
+('A0010001', 'A001', 'HD001', 5, 500),
+('C0010001', 'C001', 'HD001', 3, 2400),
+
+('A0010001', 'A001', 'HD002', 8, 500),
+('C0020001', 'C002', 'HD002', 6, 1800),
+('D0010001', 'D001', 'HD002', 2, 9500),
+
+('D0020001', 'D002', 'HD003', 4, 4000),
+('M0020001', 'P001', 'HD003', 5, 7200), 
+('M0010001', 'P002', 'HD003', 3, 3300), 
+
+-- CN002 --chưa sửa
+('I0010001', 'I001', 'HD004', 4, 2500),
+('L0010001', 'L001', 'HD004', 3, 3200),
+('M0010001', 'M001', 'HD004', 5, 3300),
+
+('M0020001', 'M002', 'HD005', 3, 7200),
+('O0010001', 'O001', 'HD005', 6, 4700),
+
+('V0020001', 'V002', 'HD006', 1, 195000),
+
+-- CN003
+('A0030001', 'A003', 'HD007', 5, 1500),
+('B0010001', 'B001', 'HD007', 2, 3500),
+('C0020001', 'C002', 'HD007', 4, 1800),
+
+('D0020001', 'D002', 'HD008', 6, 4000),
+('I0010002', 'I001', 'HD008', 3, 2500),
+('L0020001', 'L002', 'HD008', 5, 4500),
+('M0020001', 'M002', 'HD008', 4, 7200),
+
+('O0010001', 'O001', 'HD009', 3, 4700),
+('P0010001', 'P001', 'HD009', 5, 4200),
+
+('V0010001', 'V001', 'HD010', 3, 2000),
+('V0020001', 'V002', 'HD010', 2, 195000);
